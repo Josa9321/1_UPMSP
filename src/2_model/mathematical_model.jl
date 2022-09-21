@@ -7,6 +7,7 @@ function declare_model(instance::InstanceUPMSP, model_params::ModelParams = init
             model_params.optimizer, 
             "CPX_PARAM_SCRIND" => model_params.log, 
             "CPXPARAM_MIP_Tolerances_MIPGap" => model_params.relative_gap, 
+            "CPX_PARAM_TILIM" => model_params.time_limit,
             "CPX_PARAM_THREADS" => model_params.threads
         )
     ) 
