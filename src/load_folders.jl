@@ -1,3 +1,5 @@
+const VERIFY_FUNCTIONS = true
+
 function read_addresses(main_address = "src")
     if main_address == "src//load_folders.jl"
         return nothing

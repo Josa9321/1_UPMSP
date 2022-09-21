@@ -1,24 +1,29 @@
-function convert_model_to_heuristic(upmsp_model, instance; verify_fitness_function = true)
+function convert_model_to_heuristic(upmsp_model, instance)
+    global VERIFY_FUNCTIONS
+
     solution = generate_zero_solution(instance)
-
     define_job_machine!(solution, upmsp_model, instance)
-
     model_makespan = objective_value(upmsp_model)
-    if verify_fitness_function
-        fitness_function!(solution, instance)
-        if (0.0 - model_makespan)/model_makespan > 0.05
-            println(solution.job_machine)
-            println("makespan = $(solution.makespan) != $(model_makespan)")
 
-            save_solution(solution, "./test//error_data")
-            
-            @error("The objective from the model is different from the fitness_function")
-        end
-    end
-
-    solution.makespan = model_makespan
-
+    VERIFY_FUNCTIONS ? verify_fitness_function!(solution, instance, model_makespan
+        ) : solution.makespan = model_makespan
+    
     return solution
+end
+
+function verify_fitness_function!(solution, instance, model_makespan)
+    fitness_function!(solution, instance)
+    if abs((solution.makespan - model_makespan)/model_makespan) > 0.05
+        println(solution.job_machine)
+        println("makespan = $(solution.makespan) != $(model_makespan)")
+
+        solution_address = "./test//error_data"
+        save_solution(solution, solution_address)
+
+        @error("The objective from the model is different from the fitness_function.\nSaving solution at: $solution_address")
+        error_1
+    end
+    return nothing
 end
 
 function define_job_machine!(solution, upmsp_model, instance)
