@@ -8,7 +8,7 @@ function read_addresses(main_address = "src")
         sub_address_list = cd(readdir, main_address)
         for sub_address_name in sub_address_list
             sub_address_address = "$(main_address)//$(sub_address_name)"
-            read_address(sub_address_address)
+            read_addresses(sub_address_address)
         end
     else
         @error("Something got wrong in $(main_address). \nIt isn't a file and isn't a folder, but somehow it was in the list to load by using:\n cd(readdir, address)")
