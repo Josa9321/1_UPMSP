@@ -3,10 +3,11 @@ struct ILSParams{F <: AbstractFloat, N <: Integer, L, S} <: ResolutionParams
     time_limit::F
     shaking_operation::S
     ls_operation::L
+    same_makespan_tolerance_ls::N
 end
 
-function initialize_ils_params(max_iteration = 50, time_limit = 100.0, shaking_operation = nothing, ls_operation = nothing)
-    return ILSParams(Int64(max_iteration), FLoat64(time_limit), shaking_operation, ls_operation)
+function initialize_ils_params(max_iteration = 50, time_limit = 100.0, shaking_operation = nothing, ls_operation = nothing, same_makespan_tolerance_ls = 5)
+    return ILSParams(Int64(max_iteration), Float64(time_limit), shaking_operation, ls_operation, Int64(same_makespan_tolerance_ls))
 end
 
 
