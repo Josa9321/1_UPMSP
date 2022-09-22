@@ -28,9 +28,7 @@ function ls_heuristic(instance::InstanceUPMSP)
     processing_time_efficiency = calculate_processing_time_efficiency(instance)
     non_allocated_jobs = non_allocated_jobs_sorted_by_efficiency(processing_time_efficiency, instance)
     p = 1
-    o = 0
-    while p <= instance.J.stop && o < 100
-        o += 1
+    while p <= instance.J.stop
         for j_ in instance.J
             selected_machine = select_random_idler_machine(machine_complete_time)
             job = non_allocated_jobs[selected_machine, j_]
@@ -48,7 +46,10 @@ function ls_heuristic(instance::InstanceUPMSP)
         end
     end
     fitness_function!(solution, instance)
-    VERIFY_FUNCTIONS ? verify_upper_bound_heuristic(solution, instance) : nothing
+    if VERIFY_FUNCTIONS 
+        verify_upper_bound_heuristic(solution, instance)
+        verify_has_any_zeros(solution)
+    end
     return solution
 end
 
@@ -76,6 +77,7 @@ function verify_non_allocated_sorting(non_allocated_jobs, processing_time_effici
             if efficiency >= processing_time_efficiency[m, j]
                 efficiency = processing_time_efficiency[m, j]
                 if efficiency < 1/sqrt(instance.M.stop) && machine_m_still_used
+                    # This if was used only to print some info to verify
                     machine_m_still_used = false
                 end
             else
@@ -119,6 +121,15 @@ function verify_upper_bound_heuristic(solution, instance)
         @error("Upper bound from the heuristic isn't being respected.")
         solution_address = "./test//error_data"
         save_solution(solution, solution_address)
+    end
+    return nothing
+end
+
+function verify_has_any_zeros(solution)
+    for job in solution.job_machine
+        if job == 0
+            @error("Solution has a 0 in it")
+        end
     end
     return nothing
 end

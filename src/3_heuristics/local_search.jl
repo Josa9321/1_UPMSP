@@ -25,27 +25,21 @@ function local_search_in_neighboor!(solution, instance)
             continue
         end
         for new_m in instance.M
-            # println("||j = $j")
             if new_m != before_makespan_machine
                 task_move_neighboor_operation!(solution, new_m, j)
                 fitness_function!(solution, instance)
-                # println(" * solution.makespan = $(solution.makespan), $(solution.job_machine)")
                 if solution.makespan <= best_makespan
-                    # println("is better than $best_makespan")
                     best_index = solution.makespan_machine_index
                     best_makespan = solution.makespan
                     best_new_m = new_m
                     best_j = j
-                    # println("m = $new_m, j = $j")
                 end
                 task_move_neighboor_operation!(solution, before_makespan_machine, j)
-                # println(" --- $(solution.job_machine), m = $before_makespan_machine, j = $j")
             end
         end
     end
     if best_j != 0
         # It found a better solution
-        # println("$best_new_m in job $best_j")
         task_move_neighboor_operation!(solution, best_new_m, best_j)
         solution.makespan_machine_index = best_index
         solution.makespan = best_makespan
