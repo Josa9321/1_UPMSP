@@ -6,7 +6,7 @@ function convert_model_to_heuristic(upmsp_model, instance)
     model_makespan = objective_value(upmsp_model)
 
     VERIFY_FUNCTIONS ? verify_fitness_function!(solution, instance, model_makespan
-        ) : solution.makespan = model_makespan
+        ) : fitness_function!(solution, instance)
     
     return solution
 end

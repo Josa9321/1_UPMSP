@@ -2,7 +2,7 @@ include("1_solution_struct.jl")
 
 function generate_zero_solution(instance::InstanceUPMSP)
     job_machine = zeros(Int64, instance.J.stop)
-    return SolutionUPMSP(job_machine, 0.0)
+    return SolutionUPMSP(job_machine, 0.0, 0)
 end
 
 function generate_aleatory_solution(instance::InstanceUPMSP)
@@ -19,7 +19,7 @@ function generate_aleatory_solution!(solution::SolutionUPMSP, instance::Instance
 end
 
 function ls_heuristic(instance::InstanceUPMSP)
-    # https://www.sciencedirect.com/science/article/pii/S0957417421002840, Wu and Che (2019), cited by this paper
+    # https://www.sciencedirect.com/science/article/pii/S0305048317307922, Wu and Che (2019)
     global VERIFY_FUNCTIONS
 
     solution = generate_zero_solution(instance)
@@ -29,24 +29,17 @@ function ls_heuristic(instance::InstanceUPMSP)
     non_allocated_jobs = non_allocated_jobs_sorted_by_efficiency(processing_time_efficiency, instance)
     p = 1
     o = 0
-    # println()
     while p <= instance.J.stop && o < 100
         o += 1
-        # println("*** Machine $selected_machine")
         for j_ in instance.J
             selected_machine = select_random_idler_machine(machine_complete_time)
             job = non_allocated_jobs[selected_machine, j_]
             if processing_time_efficiency[selected_machine, job] < 1.0/sqrt(instance.M.stop)
-                # if machine_complete_time[selected_machine] != Inf
-                #     println("   - From here, $j_, job = $job, machine $selected_machine wont be used anymore in this solution")
-                # end
                 machine_complete_time[selected_machine] = Inf
                 break
             elseif solution.job_machine[job] != 0
-                # println("job $job was passed")
                 continue
             else
-                # println("Job $job was allocated in machine $selected_machine")
                 machine_complete_time[selected_machine] += instance.processing_time[selected_machine, job]
                 solution.job_machine[job] = selected_machine
                 p += 1
@@ -76,17 +69,14 @@ end
 
 function verify_non_allocated_sorting(non_allocated_jobs, processing_time_efficiency, instance)
     for m in instance.M
-        # println("* $m")
         machine_m_still_used = true
         job_1 = non_allocated_jobs[m, 1]
         efficiency = processing_time_efficiency[m, job_1]
         for (j_, j) in enumerate(non_allocated_jobs[m, :])
             if efficiency >= processing_time_efficiency[m, j]
-                # println("Order is being respected, $efficiency >= $(processing_time_efficiency[m, j])")
                 efficiency = processing_time_efficiency[m, j]
                 if efficiency < 1/sqrt(instance.M.stop) && machine_m_still_used
                     machine_m_still_used = false
-                    # println("   - From here, $j_, job = $j, machine $m wont be used anymore in this solution")
                 end
             else
                 @error("Efficiency is going up, from job $(j-1) to $(j) in the non_allocated_jobs order")
