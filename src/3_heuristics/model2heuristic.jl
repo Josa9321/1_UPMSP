@@ -17,11 +17,10 @@ function verify_fitness_function!(solution, instance, model_makespan)
         println(solution.job_machine)
         println("makespan = $(solution.makespan) != $(model_makespan)")
 
-        solution_address = "./test//error_data"
+        solution_address = "./test//error_data//"
         save_solution(solution, solution_address)
 
-        @error("The objective from the model is different from the fitness_function.\nSaving solution at: $solution_address")
-        error_1
+        @error("The objective from the model is different from the fitness_function.")
     end
     return nothing
 end

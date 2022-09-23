@@ -53,12 +53,12 @@ function local_search_in_neighboor!(solution, instance)
 end
 
 function verify_local_search_loop(solution, instance)
-    makespan_local_search = solution.makespan
+    makespan_local_search = 0.0#solution.makespan
     machine_makespan = solution.makespan_machine_index
     fitness_function!(solution, instance)
     if makespan_local_search != solution.makespan || machine_makespan != solution.makespan_machine_index
         @error("Solution makespan or makespan machine index is different than it should be.\n$(makespan_local_search) makespan should be $(solution.makespan) || $(machine_makespan) index should be $(solution.makespan_machine_index)")
-        solution_address = "./test//error_data"
+        solution_address = "./test//error_data//"
         save_solution(solution, solution_address)
     end
     return nothing

@@ -5,6 +5,11 @@ function generate_zero_solution(instance::InstanceUPMSP)
     return SolutionUPMSP(job_machine, 0.0, 0)
 end
 
+function generate_zero_solution(num_jobs::Int64)
+    job_machine = zeros(Int64, num_jobs)
+    return SolutionUPMSP(job_machine, 0.0, 0)
+end
+
 function generate_aleatory_solution(instance::InstanceUPMSP)
     solution = generate_zero_solution(instance)
     return generate_aleatory_solution!(solution, instance)
@@ -119,7 +124,7 @@ function verify_upper_bound_heuristic(solution, instance)
     upmsp_model = solve_instance_by_milp(instance)
     if solution.makespan > 2.5*sqrt(instance.M.stop)*objective_value(upmsp_model)
         @error("Upper bound from the heuristic isn't being respected.")
-        solution_address = "./test//error_data"
+        solution_address = "./test//error_data//"
         save_solution(solution, solution_address)
     end
     return nothing
