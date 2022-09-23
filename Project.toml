@@ -1,6 +1,11 @@
 [deps]
 CPLEX = "a076750e-1247-5638-91d2-ce28b192dca0"
+DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
 DelimitedFiles = "8bb1440f-4735-579b-a4ab-409b98df4dab"
 Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
+Gadfly = "c91e804a-d5a3-530f-b6f0-dfbca275c004"
 JuMP = "4076af6c-e467-56ae-b986-b466b2749572"
 StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
+TerminalMenus = "dc548174-15c3-5faf-af27-7997cfbde655"
+VegaLite = "112f6efa-9a02-5b7d-90c0-432ed331239a"
+XLSX = "fdbf4ff8-1666-58a4-91e7-1b58723a45e0"

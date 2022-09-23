@@ -4,24 +4,13 @@ function save_solution(solution::SolutionUPMSP, folder_address::String)
         job_machine_string = string(job_machine_string, "$m ")
     end
     job_machine_string = string(job_machine_string, "\n$(solution.makespan)\n$(solution.makespan_machine_index)")
-    solution_file_name = "$(folder_address)solution"
-    list_of_solutions = Int64[]
-    last_number = 0
-    if isfile("$(solution_file_name)$(last_number).txt")
-        list_of_files = cd(readdir, folder_address)
-        files_is_solutions = occursin.(Ref("solution"), list_of_files)
+    solution_file_name = "$(folder_address)solution.txt"
 
-        for (j, file_is_solution) in enumerate(files_is_solutions)
-            if file_is_solution
-                number_of_solution = parse(Int64, list_of_files[j][9:(end-4)])
-                if last_number == number_of_solution
-                    last_number = number_of_solution+1
-                end
-            end
-        end
+    if isfile(solution_file_name)
+        select_option(message = """Before continuing, rename the "$(solution_file_name)" file or remove it from the folder if you want to keep it.\nAfter that or if you don't want to keep it, select "Continue".""", options = ["Continue"])
     end
 
-    open("$(solution_file_name)$(last_number).txt", "w") do file
+    open(solution_file_name, "w") do file
         write(file, job_machine_string)
     end
     return nothing
